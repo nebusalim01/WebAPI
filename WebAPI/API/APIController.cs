@@ -12,9 +12,11 @@ namespace WebAPI.API
     {
         WebAPIEntities objdb = new WebAPIEntities();
         // GET: api/API
-        public IEnumerable<string> Get()
+        [HttpGet]
+        [Route("api/API/getAllDetails")]
+        public IHttpActionResult Get()
         {
-            return new string[] { "value1", "value2" };
+            return Ok(objdb.student_table.ToList());
         }
 
         // GET: api/API/5

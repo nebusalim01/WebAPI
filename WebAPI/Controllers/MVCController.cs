@@ -18,7 +18,26 @@ namespace WebAPI.Controllers
         // GET: MVC
         public ActionResult Index()
         {
-            return View(db.student_table.ToList());
+            //return View(db.student_table.ToList());
+            IEnumerable<student_table> students = null;
+            using(var client=new HttpClient())
+            {
+                client.BaseAddress = new Uri("http://localhost:63809/api/API/");
+                var responseTask = client.GetAsync("getAllDetails");
+                responseTask.Wait();
+                var result = responseTask.Result;
+                if (result.IsSuccessStatusCode)
+                {
+                    var readTask = result.Content.ReadAsAsync<IList<student_table>>();
+                    readTask.Wait();
+                    students = readTask.Result;
+                }
+                else
+                {
+                    students = Enumerable.Empty<student_table>();
+                }
+            }
+            return View(students);
         }
 
         // GET: MVC/Details/5
